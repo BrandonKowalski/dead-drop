@@ -1,0 +1,10 @@
+services:
+  dead-drop:
+    build: .
+    ports:
+      - "8787:3000"
+    environment:
+      - PORT=3000
+    volumes:
+      - ./keys:/app/keys:ro
+    restart: unless-stopped
