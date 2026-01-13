@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+
+# Keys - NEVER commit these
+keys/
+*.key
+
+# Build outputs
+dist/
+public/client.js
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db

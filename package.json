@@ -1,0 +1,23 @@
+{
+  "name": "secure-message",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "description": "A simple age-encrypted message drop box",
+  "scripts": {
+    "dev": "bun run build && bun run --watch server.ts",
+    "start": "bun run server.ts",
+    "build": "bun run scripts/build.ts",
+    "keygen": "bun run scripts/keygen.ts",
+    "decrypt": "bun run scripts/decrypt.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "age-encryption": "^0.3.0"
+  }
+}

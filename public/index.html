@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Me a Secret | Brandon T. Kowalski</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=IBM+Plex+Mono:wght@400;600&display=swap"
+          rel="stylesheet">
+    <style>
+        :root {
+            --phosphor: #bab1ff;
+            --phosphor-dim: #7d76b3;
+            --phosphor-glow: rgba(186, 177, 255, 0.4);
+            --phosphor-subtle: rgba(186, 177, 255, 0.1);
+            --bg-dark: #0a0a0a;
+            --bg-screen: #050505;
+            --scanline-opacity: 0.08;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 18px;
+        }
+
+        body {
+            background: var(--bg-dark);
+            color: var(--phosphor);
+            font-family: 'IBM Plex Mono', monospace;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .crt-wrapper {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            background: var(--bg-screen);
+            overflow: hidden;
+        }
+
+        .screen-glare {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                    135deg,
+                    rgba(255, 255, 255, 0.03) 0%,
+                    transparent 40%,
+                    transparent 60%,
+                    rgba(255, 255, 255, 0.01) 100%
+            );
+            pointer-events: none;
+            z-index: 1001;
+        }
+
+        .crt-wrapper::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                    0deg,
+                    rgba(0, 0, 0, var(--scanline-opacity)) 0px,
+                    rgba(0, 0, 0, var(--scanline-opacity)) 1px,
+                    transparent 1px,
+                    transparent 2px
+            );
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .glow {
+            text-shadow: 0 0 2px var(--phosphor),
+            0 0 8px var(--phosphor-glow),
+            0 0 20px var(--phosphor-glow);
+        }
+
+        .glow-strong {
+            text-shadow: 0 0 2px var(--phosphor),
+            0 0 10px var(--phosphor),
+            0 0 30px var(--phosphor-glow),
+            0 0 50px var(--phosphor-glow);
+        }
+
+        .screen-content {
+            padding: 3rem 2rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        nav {
+            margin-bottom: 2rem;
+        }
+
+        nav a {
+            color: var(--phosphor-dim);
+            text-decoration: none;
+            font-family: 'VT323', monospace;
+            font-size: 1.2rem;
+            transition: all 0.2s ease;
+        }
+
+        nav a::before {
+            content: '< ';
+        }
+
+        nav a:hover {
+            color: var(--phosphor);
+            text-shadow: 0 0 10px var(--phosphor-glow);
+        }
+
+        header {
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--phosphor-dim);
+        }
+
+        h1 {
+            font-family: 'VT323', monospace;
+            font-size: 2.5rem;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 0.85rem;
+            color: var(--phosphor-dim);
+            letter-spacing: 0.1em;
+        }
+
+        section {
+            margin-bottom: 2rem;
+        }
+
+        label {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-family: 'VT323', monospace;
+            font-size: 1.4rem;
+            margin-bottom: 0.75rem;
+        }
+
+        label::before {
+            content: '>';
+            color: var(--phosphor-dim);
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 180px;
+            padding: 1rem;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            background: var(--phosphor-subtle);
+            border: 1px solid var(--phosphor-dim);
+            color: var(--phosphor);
+            resize: vertical;
+            transition: all 0.2s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--phosphor);
+            box-shadow: 0 0 15px var(--phosphor-glow);
+        }
+
+        textarea::placeholder {
+            color: var(--phosphor-dim);
+        }
+
+        button {
+            font-family: 'VT323', monospace;
+            font-size: 1.2rem;
+            padding: 0.5rem 1.25rem;
+            background: var(--phosphor-subtle);
+            color: var(--phosphor);
+            border: 1px solid var(--phosphor-dim);
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        button::before {
+            content: '[';
+            color: var(--phosphor-dim);
+        }
+
+        button::after {
+            content: ']';
+            color: var(--phosphor-dim);
+        }
+
+        button:hover {
+            border-color: var(--phosphor);
+            box-shadow: 0 0 15px var(--phosphor-glow);
+            text-shadow: 0 0 10px var(--phosphor-glow);
+        }
+
+        .output-section {
+            display: none;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--phosphor-dim);
+        }
+
+        .output-section.visible {
+            display: block;
+        }
+
+        .output-box {
+            background: var(--phosphor-subtle);
+            border: 1px solid var(--phosphor-dim);
+            padding: 1rem;
+            font-size: 0.7rem;
+            word-break: break-all;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 0.75rem;
+            line-height: 1.6;
+        }
+
+        .copy-btn.copied {
+            background: var(--phosphor);
+            color: var(--bg-dark);
+            border-color: var(--phosphor);
+        }
+
+        .info {
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--phosphor-dim);
+            font-size: 0.8rem;
+            color: var(--phosphor-dim);
+            line-height: 1.6;
+        }
+
+        .info p {
+            margin-bottom: 0.5rem;
+        }
+
+        .info code {
+            background: var(--phosphor-subtle);
+            padding: 0.15rem 0.4rem;
+            font-size: 0.75rem;
+            color: var(--phosphor);
+        }
+
+        .info a {
+            color: var(--phosphor);
+            text-decoration: none;
+        }
+
+        .info a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            html {
+                font-size: 16px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .screen-content {
+                padding: 2rem 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="crt-wrapper">
+    <div class="screen-glare"></div>
+    <div class="screen-content">
+        <nav>
+            <a href="https://kowalski.io">kowalski.io</a>
+        </nav>
+
+        <header>
+            <h1 class="glow-strong">Dead Drop</h1>
+            <p class="subtitle">a tool to safely send me a secret</p>
+        </header>
+
+        <section>
+            <label for="message" class="glow">Your Message</label>
+            <textarea id="message" placeholder="Type something..."></textarea>
+            <button id="encrypt-btn">encrypt</button>
+        </section>
+
+        <section id="output-section" class="output-section">
+            <label class="glow">Encrypted Message</label>
+            <div id="output" class="output-box"></div>
+            <button id="copy-btn" class="copy-btn">copy</button>
+        </section>
+
+        <div class="info">
+            <p>This encrypts your message so nothing readable ever leaves your device.</p>
+            <p>Copy the gobbledygook below and send it to me however you like—email, text, carrier pigeon. Carrier pigeon preferred!</p>
+        </div>
+    </div>
+</div>
+
+<script type="module" src="/client.js"></script>
+</body>
+</html>
