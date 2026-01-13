@@ -269,6 +269,21 @@
             text-decoration: underline;
         }
 
+        .alert {
+            display: none;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.5rem;
+            background: rgba(255, 100, 100, 0.1);
+            border: 1px solid #ff6464;
+            color: #ff6464;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .alert.visible {
+            display: block;
+        }
+
         @media (max-width: 600px) {
             html {
                 font-size: 16px;
@@ -296,6 +311,8 @@
             <h1 class="glow-strong">Dead Drop</h1>
             <p class="subtitle">a tool to safely send me a secret</p>
         </header>
+
+        <div id="alert" class="alert"></div>
 
         <section>
             <label for="message" class="glow">Your Message</label>

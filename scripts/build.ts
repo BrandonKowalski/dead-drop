@@ -15,8 +15,8 @@ async function main() {
     publicKey = (await Bun.file(PUBLIC_KEY_PATH).text()).trim();
     console.log(`Found public key: ${publicKey.slice(0, 20)}...`);
   } else {
-    console.warn("No public key found. Run 'bun run keygen' first.");
-    console.warn("   Building with empty key (encryption won't work).");
+    console.error("No public key found. Run 'bun run keygen' first.");
+    process.exit(1);
   }
 
   const result = await Bun.build({
@@ -29,8 +29,7 @@ async function main() {
   });
 
   if (result.success) {
-    // @ts-ignore
-    console.log(`Built public/client.js (${(result.outputs[0].size / 1024).toFixed(1)} KB)`);
+    console.log(`Built public/client.js (${((result.outputs[0]?.size ?? 0) / 1024).toFixed(1)} KB)`);
   } else {
     console.error("Build failed:");
     console.error(result.logs);

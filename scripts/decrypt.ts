@@ -16,14 +16,12 @@ import * as readline from "readline";
 const SECRET_KEY_PATH = "./keys/secret.key";
 
 async function main() {
-  // Check for secret key
   if (!existsSync(SECRET_KEY_PATH)) {
     console.error("No secret key found at", SECRET_KEY_PATH);
     console.error("Run 'bun run keygen' first to generate your keypair.");
     process.exit(1);
   }
 
-  // Check if age is installed
   try {
     await $`which age`.quiet();
   } catch {
@@ -38,22 +36,19 @@ async function main() {
 
   let encryptedMessage: string;
 
-  // Check if a file was passed as argument
   const inputFile = process.argv[2];
 
   if (inputFile) {
-    // Read from file
     if (!existsSync(inputFile)) {
       console.error(`File not found: ${inputFile}`);
       process.exit(1);
     }
     encryptedMessage = await Bun.file(inputFile).text();
   } else if (!process.stdin.isTTY) {
-    // Read from pipe
     encryptedMessage = await Bun.stdin.text();
   } else {
     // Interactive mode - read until we see END AGE ENCRYPTED FILE
-    console.log("📨 Paste the encrypted message (including the BEGIN/END lines):");
+    console.log("Paste the encrypted message (including the BEGIN/END lines):");
     console.log("");
 
     const rl = readline.createInterface({
@@ -80,13 +75,12 @@ async function main() {
     process.exit(1);
   }
 
-  // Write to temp file and decrypt
   const tempFile = `/tmp/age-decrypt-${Date.now()}.txt`;
   await Bun.write(tempFile, encryptedMessage.trim());
 
   try {
     console.log("");
-    console.log("🔓 Decrypted message:");
+    console.log("Decrypted message:");
     console.log("─".repeat(40));
 
     const result = await $`age -d -i ${SECRET_KEY_PATH} ${tempFile}`.text();
@@ -97,7 +91,6 @@ async function main() {
     console.error("Decryption failed. Is this a valid age-encrypted message?");
     process.exit(1);
   } finally {
-    // Clean up temp file
     await $`rm -f ${tempFile}`.quiet();
   }
 }
