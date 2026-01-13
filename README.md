@@ -71,4 +71,3 @@ Build creates a static site in `public/`. Deploy however you want:
 
 - **Static hosting**: Deploy the `public/` folder to Netlify, Vercel, GitHub Pages, etc.
 - **With Bun**: `bun run build && bun run start` in production
-- **Docker**: Build your own image
